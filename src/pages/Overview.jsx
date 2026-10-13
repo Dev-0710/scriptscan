@@ -32,7 +32,7 @@ export default function Overview() {
           </div>
           <div className="flex-1 hidden lg:block">
             <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-200 bg-white p-2">
-               <img src="/demo-manuscript.png" alt="Demo" className="w-full h-64 object-cover rounded-lg" />
+               <img src={`${import.meta.env.BASE_URL}demo-manuscript.png`} alt="Demo" className="w-full h-64 object-cover rounded-lg" />
                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur rounded-lg p-3 shadow-lg">
                  <div className="text-xs font-semibold text-gray-500 mb-1">LIVE DECODING</div>
