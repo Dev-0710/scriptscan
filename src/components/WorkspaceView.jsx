@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ZoomIn, RotateCw, Hand, Maximize, Search, Check, FileDown, Layers } from 'lucide-react';
+import { ZoomIn, Maximize, Check, Image, FileText as EditorIcon } from 'lucide-react';
 
 const DUMMY_DATA = {
   image_dimensions: { width: 1200, height: 1600 },
@@ -98,10 +98,36 @@ export default function WorkspaceView({ activeDocument }) {
     setActiveTokenId(tokenId);
   };
 
+  const [mobileTab, setMobileTab] = useState('image'); // 'image' | 'editor'
+
   return (
-    <div className="flex h-full bg-slate-100 overflow-hidden w-full">
+    <div className="flex flex-col h-full bg-slate-100 overflow-hidden w-full">
+      {/* Mobile Tab Bar */}
+      <div className="md:hidden flex border-b border-gray-700 bg-gray-800 shrink-0">
+        <button
+          onClick={() => setMobileTab('image')}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium transition-colors ${
+            mobileTab === 'image' ? 'text-white border-b-2 border-indigo-400 bg-gray-700' : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          <Image className="w-4 h-4" /> Image Viewer
+        </button>
+        <button
+          onClick={() => setMobileTab('editor')}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium transition-colors ${
+            mobileTab === 'editor' ? 'text-white border-b-2 border-indigo-400 bg-gray-700' : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          <EditorIcon className="w-4 h-4" /> Sync Editor
+        </button>
+      </div>
+
+      {/* Desktop split / Mobile single-tab */}
+      <div className="flex flex-1 overflow-hidden">
       {/* Left Panel: Image Viewer */}
-      <div className="flex-1 flex flex-col border-r border-gray-200 bg-gray-900 min-w-0">
+      <div className={`flex-col border-r border-gray-200 bg-gray-900 min-w-0 ${
+        mobileTab === 'image' ? 'flex' : 'hidden'
+      } md:flex flex-1`}>
         {/* Toolbar */}
         <div className="h-12 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4 text-gray-300 shadow-md z-10 shrink-0">
            <div className="flex items-center gap-4 text-sm font-medium overflow-hidden">
@@ -194,7 +220,9 @@ export default function WorkspaceView({ activeDocument }) {
       </div>
 
       {/* Right Panel: Transcription Editor */}
-      <div className="w-[480px] bg-white flex flex-col shrink-0 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.1)] z-20">
+      <div className={`bg-white flex flex-col shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.1)] z-20 ${
+        mobileTab === 'editor' ? 'flex' : 'hidden'
+      } md:flex w-full md:w-[400px] lg:w-[480px] shrink-0`}>
         <div className="h-12 border-b border-gray-200 flex items-center px-4 bg-slate-50 justify-between shrink-0">
            <div className="flex gap-4 text-sm font-medium">
              <button className="text-indigo-600 border-b-2 border-indigo-600 h-12">Sync Editor</button>
@@ -281,6 +309,7 @@ export default function WorkspaceView({ activeDocument }) {
              );
            })}
         </div>
+      </div>
       </div>
     </div>
   );
