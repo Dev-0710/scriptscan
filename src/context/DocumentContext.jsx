@@ -4,33 +4,61 @@ const DocumentContext = createContext();
 
 const base = import.meta.env.BASE_URL;
 
-const mockDocuments = [
-  { id: 1, filename: "Folio_MS_1402_Deed.tiff", collection: "Historical Folio", date: "Oct 24, 2024", lines: 42, confidence: 94.2, status: "Completed", image: `${base}doc_folio_1402.png` },
-  { id: 2, filename: "Lab_Notes_DrAris_Vol3.pdf", collection: "Cursive Notes", date: "Oct 23, 2024", lines: 118, confidence: 68.4, status: "Needs Review", image: `${base}doc_lab_notes.png` },
-  { id: 3, filename: "Archival_Letter_1884.png", collection: "Correspondence", date: "Oct 22, 2024", lines: 28, confidence: 98.1, status: "Completed", image: `${base}doc_archival_letter.png` }
-];
+const letterADoc = {
+  id: 1,
+  filename: "Letter_A_Sample.png",
+  collection: "Single Letter",
+  date: "Oct 14, 2026",
+  lines: 1,
+  confidence: 96.5,
+  status: "Completed",
+  image: `${base}letter_a.png`,
+  // Segmentation data powering the Workspace view
+  segmentationData: {
+    image_dimensions: { width: 800, height: 800 },
+    lines: [
+      {
+        line_id: "L01",
+        bbox: [200, 180, 400, 440],
+        text: "A",
+        confidence: 96.5,
+        tokens: [
+          {
+            token_id: "T01_01",
+            bbox: [200, 180, 400, 440],
+            text: "A",
+            confidence: 96.5,
+            candidates: ["A", "Λ", "Δ"],
+          },
+        ],
+      },
+    ],
+  },
+};
 
 export function DocumentProvider({ children }) {
-  const [documents, setDocuments] = useState(mockDocuments);
-  const [activeDocumentId, setActiveDocumentId] = useState(mockDocuments[0].id);
+  const [documents, setDocuments] = useState([letterADoc]);
+  const [activeDocumentId, setActiveDocumentId] = useState(letterADoc.id);
   const [pipelineParams, setPipelineParams] = useState({
     model: "CNN-BiLSTM-CTC",
     beamWidth: 16,
-    languageModel: "Middle-English"
+    languageModel: "English",
   });
 
-  const activeDocument = documents.find(d => d.id === activeDocumentId);
+  const activeDocument = documents.find((d) => d.id === activeDocumentId);
 
   return (
-    <DocumentContext.Provider value={{
-      documents, 
-      setDocuments,
-      activeDocumentId, 
-      setActiveDocumentId, 
-      activeDocument,
-      pipelineParams,
-      setPipelineParams
-    }}>
+    <DocumentContext.Provider
+      value={{
+        documents,
+        setDocuments,
+        activeDocumentId,
+        setActiveDocumentId,
+        activeDocument,
+        pipelineParams,
+        setPipelineParams,
+      }}
+    >
       {children}
     </DocumentContext.Provider>
   );
